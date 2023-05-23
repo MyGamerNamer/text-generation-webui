@@ -1,6 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from threading import Thread
+import urllib
 
 from extensions.api.util import build_parameters, try_start_cloudflared
 from modules import shared
@@ -16,8 +17,13 @@ class Handler(BaseHTTPRequestHandler):
             response = json.dumps({
                 'result': shared.model_name
             })
-
-            self.wfile.write(response.encode('utf-8'))
+        elif self.path.startswith('/file='):
+            filename = urllib.parse.unquote(self.path.strip("/file").strip('='))
+            self.send_response(200)
+            self.send_header('Content-type', 'audio/mpeg')
+            self.end_headers()
+            with open(filename, 'rb') as file:
+                self.wfile.write(file.read())
         else:
             self.send_error(404)
 
