@@ -14,5 +14,4 @@ pip install -U flask_cloudflared
 pip install -r ./requirements.txt
 pip install -r ./extensions/elevenlabs_tts/requirements.txt
 
-#python server.py --wbits 4 --groupsize 128 --public-api --verbose --chat --auto-devices --share --extensions elevenlabs_tts api
 echo "Successfully installed API, ready to start using oobabooga_run.sh"

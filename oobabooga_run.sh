@@ -10,4 +10,4 @@ fi
 echo "Activating virtual environment..."
 source "$venv_name/bin/activate"
 
-python server.py --wbits 4 --groupsize 128 --public-api --verbose --chat --auto-devices --share --extensions elevenlabs_tts api
+python server.py --public-api --verbose --chat --auto-devices --share --extensions elevenlabs_tts api
