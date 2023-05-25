@@ -15,7 +15,7 @@ Its goal is to become the [AUTOMATIC1111/stable-diffusion-webui](https://github.
 * Chat mode for conversation and role-playing
 * Instruct mode compatible with various formats, including Alpaca, Vicuna, Open Assistant, Dolly, Koala, ChatGLM, MOSS, RWKV-Raven, Galactica, StableLM, WizardLM, Baize, Ziya, Chinese-Vicuna, MPT, INCITE, Wizard Mega, KoAlpaca, Vigogne, Bactrian, h2o, and OpenBuddy
 * [Multimodal pipelines, including LLaVA and MiniGPT-4](https://github.com/oobabooga/text-generation-webui/tree/main/extensions/multimodal)
-* Markdown output for [GALACTICA](https://github.com/paperswithcode/galai), including LaTeX rendering
+* Markdown output with LaTeX rendering, to use for instance with [GALACTICA](https://github.com/paperswithcode/galai)
 * Nice HTML output for GPT-4chan
 * [Custom chat characters](docs/Chat-mode.md)
 * Advanced chat features (send images, get audio responses with TTS)
@@ -26,7 +26,7 @@ Its goal is to become the [AUTOMATIC1111/stable-diffusion-webui](https://github.
 * [LoRA (loading and training)](docs/Using-LoRAs.md)
 * [llama.cpp](docs/llama.cpp-models.md)
 * [RWKV model](docs/RWKV-model.md)
-* 8-bit mode
+* 8-bit and 4-bit through bitsandbytes
 * Layers splitting across GPU(s), CPU, and disk
 * CPU mode
 * [FlexGen](docs/FlexGen.md)
@@ -104,6 +104,13 @@ The base installation covers [transformers](https://github.com/huggingface/trans
 To use GPTQ models, the additional installation steps below are necessary:
 
 [GPTQ models (4 bit mode)](https://github.com/oobabooga/text-generation-webui/blob/main/docs/GPTQ-models-(4-bit-mode).md)
+
+#### Note about bitsandbytes
+
+bitsandbytes >= 0.39 may not work on older NVIDIA GPUs. In that case, to use `--load-in-8bit`, you may have to downgrade like this:
+
+* Linux: `pip install bitsandbytes==0.38.1`
+* Windows: `pip install https://github.com/jllllll/bitsandbytes-windows-webui/raw/main/bitsandbytes-0.38.1-py3-none-any.whl`
 
 ### Alternative: manual Windows installation
 
