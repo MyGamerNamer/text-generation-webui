@@ -1,9 +1,14 @@
+import io
 import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from threading import Thread
 import urllib
 
+import speech_recognition as sr
+from pydub import AudioSegment
+
 from extensions.api.util import build_parameters, try_start_cloudflared
+from extensions.whisper_stt.script import auto_transcribe, api_transcribe
 from modules import shared
 from modules.chat import generate_chat_reply
 from modules.text_generation import encode, generate_reply
@@ -17,7 +22,7 @@ class Handler(BaseHTTPRequestHandler):
             response = json.dumps({
                 'result': shared.model_name
             })
-        elif self.path.startswith('/file='):
+        elif self.path.startswith('/file='): #todo update the path
             filename = urllib.parse.unquote(self.path.strip("/file").strip('='))
             self.send_response(200)
             self.send_header('Content-type', 'audio/mpeg')
@@ -28,10 +33,17 @@ class Handler(BaseHTTPRequestHandler):
             self.send_error(404)
 
     def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
-        body = json.loads(self.rfile.read(content_length).decode('utf-8'))
+        if self.path == '/api/v1/stt':
+            content_length = int(self.headers['Content-Length'])
+            ogg_bytes = self.rfile.read(content_length)
 
-        if self.path == '/api/v1/generate':
+            response,_ = api_transcribe(ogg_bytes,True)
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(response.encode('utf-8'))
+        elif self.path == '/api/v1/generate':
+            content_length = int(self.headers['Content-Length'])
+            body = json.loads(self.rfile.read(content_length).decode('utf-8'))
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
@@ -57,6 +69,8 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(response.encode('utf-8'))
 
         elif self.path == '/api/v1/chat':
+            content_length = int(self.headers['Content-Length'])
+            body = json.loads(self.rfile.read(content_length).decode('utf-8'))
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
@@ -85,6 +99,8 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(response.encode('utf-8'))
 
         elif self.path == '/api/v1/token-count':
+            content_length = int(self.headers['Content-Length'])
+            body = json.loads(self.rfile.read(content_length).decode('utf-8'))
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
