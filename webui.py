@@ -143,7 +143,8 @@ def update_dependencies():
         os.rename("setup_cuda.py", "setup.py")
         
     run_cmd("python -m pip install .", environment=True)
-    
+
+    run_cmd("python -m pip install flask_cloudflared", environment=True)
     # Wheel installation can fail while in the build directory of a package with the same name
     os.chdir("..")
     
@@ -170,7 +171,7 @@ def update_dependencies():
 
 
 def download_model():
-    os.chdir("text-generation-webui")
+    # os.chdir("text-generation-webui")
     run_cmd("python download-model.py", environment=True)
 
 
