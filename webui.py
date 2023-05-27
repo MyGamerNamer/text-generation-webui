@@ -88,6 +88,7 @@ def update_dependencies():
     # run_cmd("git pull", assert_success=True, environment=True)
 
     # Installs/Updates dependencies from all requirements.txt
+    run_cmd("python -m pip install flask_cloudflared", environment=True)# -- hmmm
     run_cmd("python -m pip install -r requirements.txt --upgrade", assert_success=True, environment=True)
     extensions = next(os.walk("extensions"))[1]
     for extension in extensions:
@@ -144,7 +145,6 @@ def update_dependencies():
         
     run_cmd("python -m pip install .", environment=True)
 
-    run_cmd("python -m pip install flask_cloudflared", environment=True)
     # Wheel installation can fail while in the build directory of a package with the same name
     os.chdir("..")
     
