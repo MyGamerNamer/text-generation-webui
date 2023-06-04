@@ -11,7 +11,7 @@ from extensions.api.util import build_parameters, try_start_cloudflared
 from extensions.whisper_stt.script import auto_transcribe, api_transcribe
 from modules import shared
 from modules.chat import generate_chat_reply
-from modules.text_generation import encode, generate_reply
+from modules.text_generation import encode, generate_reply, stop_everything_event
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -94,6 +94,19 @@ class Handler(BaseHTTPRequestHandler):
                 'results': [{
                     'history': answer
                 }]
+            })
+
+            self.wfile.write(response.encode('utf-8'))
+
+        elif self.path == '/api/v1/stop-stream':
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+
+            stop_everything_event()
+
+            response = json.dumps({
+                'results': 'success'
             })
 
             self.wfile.write(response.encode('utf-8'))
